@@ -7,6 +7,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.get("/", (req, res) => {
+	res.send("OK");
+});
+
 app.listen(process.env.PORT, () => {
-	console.log("Listening on port "+process.env.PORT);
+	console.log("Listening on port " + process.env.PORT);
 });
