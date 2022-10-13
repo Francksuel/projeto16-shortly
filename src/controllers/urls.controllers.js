@@ -18,12 +18,12 @@ const addShorten = async (req, res) => {
 		res.sendStatus(500);
 	}
 };
-const getUrl = async(req, res) => {
-    const id = req.params.id;    
+const getUrl = async (req, res) => {
+	const id = req.params.id;
 	try {
-        if (isNaN(id)) {
-            return res.sendStatus(404);
-        }
+		if (isNaN(id)) {
+			return res.sendStatus(404);
+		}
 		const url = await connection.query(
 			`SELECT id,"shortUrl",url FROM urls WHERE urls.id = $1;`,
 			[id]
@@ -36,7 +36,24 @@ const getUrl = async(req, res) => {
 		res.sendStatus(500);
 	}
 };
-const openUrl = async(req, res) => {};
-const deleteUrl = async(req, res) => {};
+const openUrl = async (req, res) => {
+    const shortUrl = req.params.shortUrl;
+    try {		
+		const url = await connection.query(
+			`SELECT id,url,"visitCount" FROM urls WHERE urls."shortUrl" = $1;`,
+			[shortUrl]
+		);
+		if (url.rows.length === 0) {
+			return res.sendStatus(404);
+		}
+        url.rows[0].visitCount ++
+        await connection.query(`UPDATE urls SET "visitCount" = $1 WHERE urls.id = $2;`,[url.rows[0].visitCount,url.rows[0].id]);
+		res.redirect(200,url.rows[0].url);
+	} catch {
+		res.sendStatus(500);
+	}
+
+};
+const deleteUrl = async (req, res) => {};
 
 export { addShorten, getUrl, openUrl, deleteUrl };
