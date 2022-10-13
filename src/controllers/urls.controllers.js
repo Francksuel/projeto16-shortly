@@ -54,6 +54,28 @@ const openUrl = async (req, res) => {
 	}
 
 };
-const deleteUrl = async (req, res) => {};
+const deleteUrl = async (req, res) => {
+    const userId = res.locals.userId;
+    const id = req.params.id;
+    try {
+		if (isNaN(id)) {
+			return res.sendStatus(404);
+		}
+		const url = await connection.query(
+			`SELECT id,"userId" FROM urls WHERE urls.id = $1;`,
+			[id]
+		);
+		if (url.rows.length === 0) {
+			return res.sendStatus(404);
+		}
+        if (url.rows[0].userId !== userId){
+            return res.sendStatus(401);
+        }
+        await connection.query (`DELETE FROM urls WHERE urls.id = $1`,[id])
+		res.sendStatus(204);
+	} catch {
+		res.sendStatus(500);
+	}
+};
 
 export { addShorten, getUrl, openUrl, deleteUrl };
