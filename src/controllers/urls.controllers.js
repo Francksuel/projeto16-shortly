@@ -48,7 +48,7 @@ const openUrl = async (req, res) => {
 		}
         url.rows[0].visitCount ++
         await connection.query(`UPDATE urls SET "visitCount" = $1 WHERE urls.id = $2;`,[url.rows[0].visitCount,url.rows[0].id]);
-		res.redirect(200,url.rows[0].url);
+		res.redirect(url.rows[0].url);
 	} catch {
 		res.sendStatus(500);
 	}
