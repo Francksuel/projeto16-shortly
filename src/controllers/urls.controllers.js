@@ -18,8 +18,25 @@ const addShorten = async (req, res) => {
 		res.sendStatus(500);
 	}
 };
-const getUrl = (req, res) => {};
-const openUrl = (req, res) => {};
-const deleteUrl = (req, res) => {};
+const getUrl = async(req, res) => {
+    const id = req.params.id;    
+	try {
+        if (isNaN(id)) {
+            return res.sendStatus(404);
+        }
+		const url = await connection.query(
+			`SELECT id,"shortUrl",url FROM urls WHERE urls.id = $1;`,
+			[id]
+		);
+		if (url.rows.length === 0) {
+			return res.sendStatus(404);
+		}
+		res.send(url.rows[0]);
+	} catch {
+		res.sendStatus(500);
+	}
+};
+const openUrl = async(req, res) => {};
+const deleteUrl = async(req, res) => {};
 
 export { addShorten, getUrl, openUrl, deleteUrl };
