@@ -6,5 +6,4 @@ const usersRouter = express.Router();
 
 usersRouter.get("/users/me", checkUser, getUserData);
 
-
 export { usersRouter };
