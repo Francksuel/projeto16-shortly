@@ -1,5 +1,5 @@
 import { connection } from "../database/db.js";
-import { customAlphabet, nanoid } from "nanoid";
+import { customAlphabet} from "nanoid";
 const addShorten = async (req, res) => {
 	const userId = res.locals.userId;
 	const url = res.locals.url;
